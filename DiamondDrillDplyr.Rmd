@@ -1,0 +1,166 @@
+---
+title: "Diamond Drill with dplyr"
+author: "Li-Ta Lo"
+date: "February 11, 2016"
+output: 
+  ioslides_presentation: 
+    highlight: tango
+---
+
+```{r echo = FALSE}
+library(dplyr)
+data(diamonds, package = "ggplot2")
+```
+
+## Problem 1. {.build}
+
+Make a new data set that has the average depth and price of the diamonds in the data set
+
+```{r}
+diamonds %>% summarise(avg_depth = mean(depth),
+                       avg_price = mean(price))
+```
+
+## Problem 2. {.build}
+
+Add a new column to the data set that records each diamond's price per carat.
+
+```{r}
+diamonds %>% mutate(price_per_carat = price/carat)
+```
+
+## Problem 3. {.build}
+
+Make a data set that only includes diamonds with an Ideal cut.
+
+```{r}
+diamonds %>% filter(cut == "Ideal")
+```
+
+## Problem 4. {.build}
+
+Create a new data set that groups diamonds by their cut and displays the average
+price of each group.
+
+```{r}
+diamonds %>%
+    group_by(cut) %>%
+    summarise(avg_price = mean(price))
+```
+
+## Problem 5 {.build}
+
+Create a new data set that groups diamonds by color and displays the average
+depth and average table for each group.
+
+```{r}
+diamonds %>%
+    group_by(color) %>%
+    summarise(avg_depth = mean(depth),
+              avg_table = mean(table))
+```
+
+## Problem 6. {.build}
+
+Add two columns to the diamonds data set. The first column should display the
+average depth of diamonds in the diamond's color group. The second column should
+display the average table of diamonds in the diamonds color group.
+
+```{r}
+diamonds %>%
+    group_by(color) %>%
+    mutate(avg_depth = mean(depth),
+           avg_table = mean(table))
+```
+
+## Problem 7. {.build}
+
+Make a data set that contains all of the unique combinations of cut, color, and
+clarity, as well the average price of diamonds in each group.
+
+```{r}
+diamonds %>%
+    group_by(cut, color, clarity) %>%
+    summarise(avg_price = mean(price))
+```
+
+## Problem 8. {.build}
+
+Add a column to the diamonds data set that displays the average price for all
+diamonds with a diamond's cut, color, and clarity. 
+
+```{r}
+diamonds %>%
+    group_by(cut, color, clarity) %>%
+    mutate(avg_price = mean(price))
+```
+
+## Problem 9. {.build}
+
+Do diamonds with the best cut fetch the best price for a given amount of carats?
+
+```{r}
+diamonds %>%
+    group_by(cut) %>%
+    summarise(avg_price = mean(price/carat))
+```
+
+## Problem 10. {.build}
+
+Which color diamonds seem to be largest on average (in terms of carats)?
+
+```{r}
+diamonds %>%
+    group_by(color) %>%
+    summarise(avg_carat = mean(carat))
+```
+
+## Problem 11. {.build}
+
+What color of diamonds occurs the most frequently among diamonds with ideal cuts?
+
+```{r}
+diamonds %>%
+    group_by(color) %>%
+    summarise(count = n())
+```
+
+## Problem 12. {.build}
+
+Which clarity of diamonds has the largest average table per carats?
+
+```{r}
+diamonds %>%
+    group_by(clarity) %>%
+    summarise(avg_table_per_carat = mean(table/carat)) %>%
+    arrange(avg_table_per_carat)
+```
+
+## Problem 13. {.build}
+
+Which diamond has the largest price per carat compared other diamonds with its
+cut, color, and clarity?
+
+```{r}
+diamonds %>%
+    group_by(cut, color, clarity) %>%
+    mutate(diff = price - mean(price)) %>%
+    ungroup() %>%
+    top_n(1, diff)
+```
+
+## Problem 14. {.build}
+
+What is the average price per carat of diamonds that cost more than $10000?
+
+```{r}
+diamonds %>% filter(price > 10000) %>% summarise(mean(price/carat))
+```
+
+## Problem 15. {.build}
+
+Display the largest diamond depth observed for each clarity group.
+
+```{r}
+diamonds %>% group_by(clarity) %>% summarise(max(depth))
+```
