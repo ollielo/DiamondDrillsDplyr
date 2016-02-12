@@ -7,12 +7,12 @@ output:
     highlight: tango
 ---
 
-```{r echo = FALSE}
-library(dplyr)
+```{r, echo = FALSE}
+library(dplyr, quietly = TRUE, warn.conflicts = FALSE)
 data(diamonds, package = "ggplot2")
 ```
 
-## Problem 1. {.build}
+##Problem 1. {.build}
 
 Make a new data set that has the average depth and price of the diamonds in the data set
 
